@@ -8,8 +8,7 @@ with open(filename) as f:
     data = [x for x in f.readlines()]
     for x in data:
         low, high, letter, word = re.search(r'(\d+)-(\d+) (\w): (\w+)', x).groups()
-        low = int(low)
-        high = int(high)
+        low, high = int(low), int(high)
 
         if low <= word.count(letter) <= high:
             count1 += 1

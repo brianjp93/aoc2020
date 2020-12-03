@@ -46,4 +46,5 @@ def prod(iterable):
 forest = Forest(data)
 slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
 counts = [forest.count_trees_on_slope(*x) for x in slopes]
-print(prod(counts))
+print(f'Part 1: {counts[1]}')
+print(f'Part 2: {prod(counts)}')

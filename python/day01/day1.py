@@ -1,4 +1,5 @@
 import pathlib
+from functools import reduce
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')
@@ -19,13 +20,8 @@ def find_group(nums, n, count):
                 return [i] + possible
         nums.add(i)
 
-def prod(iterable):
-    out = 1
-    for i in iterable:
-        out *= i
-    return out
 
 group = find_group(nums, 2020, 2)
-print(f'Part 1: {prod(group)}')
+print(f'Part 1: {reduce(lambda x, y: x*y, group)}')
 group = find_group(nums, 2020, 3)
-print(f'Part 2: {prod(group)}')
+print(f'Part 2: {reduce(lambda x, y: x*y, group)}')

@@ -1,50 +1,25 @@
 import pathlib
+import functools
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')
 with open(filename) as f:
     data = [line.strip() for line in f]
 
-
-EMPTY = '.'
 TREE = '#'
+def count_trees_on_slope(data, dx, dy):
+    max_x = len(data[0])
+    max_y = len(data)
+    x = y = count = 0
+    while y < max_y:
+        if data[y][x % max_x] == TREE:
+            count += 1
+        x += dx
+        y += dy
+    return count
 
 
-class Forest:
-    def __init__(self, data):
-        self.max_x = self.max_y = 0
-        self.map = self.process(data)
-
-    def process(self, data):
-        out = {}
-        for y, row in enumerate(data):
-            self.max_y = max(self.max_y, y)
-            for x, ch in enumerate(row):
-                self.max_x = max(self.max_x, x)
-                out[(x, y)] = ch
-        return out
-
-    def count_trees_on_slope(self, dx, dy):
-        x = y = count = 0
-        while y <= self.max_y:
-            if self.get(x, y) == TREE:
-                count += 1
-            x += dx
-            y += dy
-        return count
-
-    def get(self, x, y):
-        return self.map[(x % (self.max_x+1), y)]
-
-def prod(iterable):
-    out = 1
-    for i in iterable:
-        out *= i
-    return out
-
-
-forest = Forest(data)
 slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
-counts = [forest.count_trees_on_slope(*x) for x in slopes]
+counts = [count_trees_on_slope(data, *x) for x in slopes]
 print(f'Part 1: {counts[1]}')
-print(f'Part 2: {prod(counts)}')
+print(f'Part 2: {functools.reduce(lambda x, y: x*y, counts)}')

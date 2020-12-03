@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-let filename = path.join(path.resolve(), 'data')
+let filename = path.join(path.dirname(process.argv[1]), 'data')
 
 let data = new Set(
     fs.readFileSync(filename, 'utf8')

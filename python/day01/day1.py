@@ -1,5 +1,4 @@
 import pathlib
-from math import prod
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')
@@ -19,6 +18,12 @@ def find_group(nums, n, count):
             if possible:
                 return [i] + possible
         nums.add(i)
+
+def prod(iterable):
+    out = 1
+    for i in iterable:
+        out *= i
+    return out
 
 group = find_group(nums, 2020, 2)
 print(f'Part 1: {prod(group)}')

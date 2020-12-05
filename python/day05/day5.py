@@ -1,12 +1,12 @@
 import pathlib
 import functools
+import re
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')
 
 def find_seat(word):
-    word = word.replace('B', '1').replace('L', '0')
-    word = word.replace('F', '0').replace('R', '1')
+    word = re.sub(r'(B|R)', '1', re.sub(r'(F|L)', '0', word))
     row = int(word[:7], 2)
     col = int(word[7:], 2)
     return row, col

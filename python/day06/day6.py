@@ -9,10 +9,7 @@ with open(filename) as f:
 inters = []
 unions = []
 for group in data:
-    people = group.splitlines()
-    groupsets = []
-    for person in people:
-        groupsets.append(set(ch for ch in person))
+    groupsets = [set(ch for ch in person) for person in group.splitlines()]
     inters.append(groupsets[0].intersection(*groupsets))
     unions.append(groupsets[0].union(*groupsets))
 

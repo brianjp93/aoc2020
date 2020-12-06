@@ -7,9 +7,7 @@ filename = pathlib.PurePath(CWD, 'data')
 
 def find_seat(word):
     word = re.sub(r'(B|R)', '1', re.sub(r'(F|L)', '0', word))
-    row = int(word[:7], 2)
-    col = int(word[7:], 2)
-    return row, col
+    return int(word[:7], 2), int(word[7:], 2)
 
 def find_my_seat(seat_ids):
     seat_id_set = set(seat_ids)

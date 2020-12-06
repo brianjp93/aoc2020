@@ -9,11 +9,7 @@ let data = fs.readFileSync(filename, 'utf8')
 
 
 function find_seat(word) {
-    word = word
-        .replaceAll('B', '1')
-        .replaceAll('L', '0')
-        .replaceAll('F', '0')
-        .replaceAll('R', '1')
+    word = word.replace(/(B|R)/g, '1').replace(/L|F/g, 0)
     let row = parseInt(word.slice(0, 7), 2)
     let col = parseInt(word.slice(7), 2)
     return [row, col]

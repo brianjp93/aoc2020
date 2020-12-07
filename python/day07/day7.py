@@ -1,9 +1,6 @@
-import sys
 import pathlib
 import re
-sys.path.append(str(pathlib.Path(__file__).absolute().parents[1]))
-
-from helpers import memo
+from functools import lru_cache
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')
@@ -25,17 +22,14 @@ def has_bag(bagtype):
             count += 1
     return count
 
-@memo
+@lru_cache
 def check_bag(bag, bagtype):
-    out = False
     for inner in bags[bag]:
-        if inner == bagtype:
-            out = True
-        elif check_bag(inner, bagtype):
-            out = True
-    return out
+        if inner == bagtype or check_bag(inner, bagtype):
+            return True
+    return False
 
-@memo
+@lru_cache
 def count_bags(bag, start=0):
     for inner, count in bags[bag].items():
         start += count * count_bags(inner, start=1)

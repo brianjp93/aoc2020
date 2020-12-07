@@ -1,5 +1,9 @@
+import sys
 import pathlib
 import re
+sys.path.append(str(pathlib.Path(__file__).absolute().parents[1]))
+
+from helpers import memo
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')
@@ -13,16 +17,6 @@ for line in data:
     bag = LEFT_REGEX.search(line).groups()[0]
     right = RIGHT_REGEX.findall(line)
     bags[bag] = {key: int(val) for val, key in right}
-
-def memo(f):
-    mem = {}
-    def inner(*args):
-        arg_string = '-'.join([f'{i},{arg}' for i, arg in enumerate(args)])
-        key = f'{__file__}-{f.__name__}-{arg_string}'
-        if key not in mem:
-            mem[key] = f(*args)
-        return mem[key]
-    return inner
 
 def has_bag(bagtype):
     count = 0

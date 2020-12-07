@@ -25,9 +25,6 @@ def check_bag(bag, bagtype):
 @lru_cache(None)
 def count_bags(bag, start=0):
     return start + sum(count * count_bags(inner, start=1) for inner, count in bags[bag].items())
-    # for inner, count in bags[bag].items():
-    #     start += count * count_bags(inner, start=1)
-    # return start
 
 print(f'Part 1: {sum(check_bag(bag, "shiny gold") for bag in bags)}')
 print(f'Part 2: {count_bags("shiny gold")}')

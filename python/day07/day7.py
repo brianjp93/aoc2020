@@ -36,14 +36,10 @@ def check_bag(bag, bagtype):
     return out
 
 @memo
-def _count_bags(bag):
-    total = 1
+def count_bags(bag, start=0):
     for inner, count in bags[bag].items():
-        mult = _count_bags(inner)
-        total += count * _count_bags(inner)
-    return total
-def count_bags(*args):
-    return _count_bags(*args) - 1
+        start += count * count_bags(inner, start=1)
+    return start
 
 print(f'Part 1: {has_bag("shiny gold")}')
 print(f'Part 2: {count_bags("shiny gold")}')

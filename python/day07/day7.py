@@ -15,13 +15,6 @@ for line in data:
     right = RIGHT_REGEX.findall(line)
     bags[bag] = {key: int(val) for val, key in right}
 
-def has_bag(bagtype):
-    count = 0
-    for bag in bags:
-        if check_bag(bag, bagtype):
-            count += 1
-    return count
-
 @lru_cache(None)
 def check_bag(bag, bagtype):
     for inner in bags[bag]:
@@ -35,5 +28,5 @@ def count_bags(bag, start=0):
         start += count * count_bags(inner, start=1)
     return start
 
-print(f'Part 1: {has_bag("shiny gold")}')
+print(f'Part 1: {sum(check_bag(bag, "shiny gold") for bag in bags)}')
 print(f'Part 2: {count_bags("shiny gold")}')

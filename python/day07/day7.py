@@ -22,14 +22,14 @@ def has_bag(bagtype):
             count += 1
     return count
 
-@lru_cache
+@lru_cache(None)
 def check_bag(bag, bagtype):
     for inner in bags[bag]:
         if inner == bagtype or check_bag(inner, bagtype):
             return True
     return False
 
-@lru_cache
+@lru_cache(None)
 def count_bags(bag, start=0):
     for inner, count in bags[bag].items():
         start += count * count_bags(inner, start=1)

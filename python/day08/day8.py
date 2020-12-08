@@ -23,9 +23,9 @@ class Comp:
     def run(self):
         while True:
             if self.index in self.index_history:
-                print(f'Instruction {self.index} already run. {self.data[self.index]}')
-                print(f'acc: {self.acc}')
-                break
+                return 'loop'
+            elif self.index == len(self.data):
+                return 'exit'
             self.index_history.add(self.index)
             self.next()
 
@@ -59,15 +59,15 @@ class Comp:
                 x = instr.split()[0]
                 datacopy[i] = datacopy[i].replace(x, swap[x])
                 self.data = datacopy
-
-                for _ in range(1000):
-                    try:
-                        self.next()
-                    except:
-                        print(f'acc: {self.acc}')
-                        break
+                exit_code = self.run()
+                if exit_code == 'loop':
+                    continue
+                else:
+                    break
 
 
 comp = Comp(data)
 comp.run()
+print(f'Part 1: {comp.acc}')
 comp.alter_test()
+print(f'Part 2: {comp.acc}')

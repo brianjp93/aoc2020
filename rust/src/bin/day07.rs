@@ -1,6 +1,8 @@
 use std::fs;
 use std::collections::HashMap;
 use regex::Regex;
+use cached::proc_macro::cached;
+use cached::SizedCache;
 
 fn main() {
     let left_regex: regex::Regex = Regex::new(r"(\w+ \w+) bags contain").unwrap();
@@ -36,6 +38,11 @@ fn main() {
     println!("{:?}", count_bags(&"shiny gold".to_string(), 0, &hash));
 }
 
+#[cached(
+    type="SizedCache<String, bool>",
+    create="{ SizedCache::with_size(1000) }",
+    convert = r#"{ format!("{}{}", bag, bagtype) }"#
+)]
 fn check_bag(bag: &String, bagtype: &String, bags: &HashMap<String, Vec<(String, i32)>>) -> bool {
     for inner in bags.get(bag).unwrap() {
         if &inner.0 == bagtype || check_bag(&inner.0, bagtype, bags) {

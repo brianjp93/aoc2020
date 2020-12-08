@@ -52,6 +52,11 @@ fn check_bag(bag: &String, bagtype: &String, bags: &HashMap<String, Vec<(String,
     return false
 }
 
+#[cached(
+    type="SizedCache<String, i32>",
+    create="{ SizedCache::with_size(1000) }",
+    convert = r#"{ format!("{}{}", bag, start) }"#
+)]
 fn count_bags(bag: &String, start: i32, bags: &HashMap<String, Vec<(String, i32)>>) -> i32 {
     return start + bags.get(bag).unwrap().into_iter().map(|inner| {
         inner.1 * count_bags(&inner.0, 1, bags)

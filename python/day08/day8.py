@@ -1,5 +1,6 @@
 import pathlib
 import re
+import time
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')
@@ -44,25 +45,24 @@ class Comp:
     def do_jmp(self, arg):
         self.index += arg
 
-    def reset(self):
-        self.data = self._data[:]
+    def reset(self, reset_data=True):
+        if reset_data:
+            self.data = self._data[:]
         self.acc = 0
         self.index = 0
         self.index_history = set()
 
     def alter_test(self):
         swap = {'jmp': 'nop', 'nop': 'jmp'}
+        self.reset(reset_data=False)
         for i, instr in enumerate(self._data):
             if 'jmp' in instr or 'nop' in instr:
-                self.reset()
-                datacopy = self._data[:]
+                self.reset(reset_data=False)
                 x = instr.split()[0]
-                datacopy[i] = datacopy[i].replace(x, swap[x])
-                self.data = datacopy
+                self.data[i] = instr.replace(x, swap[x])
                 exit_code = self.run()
-                if exit_code == 'loop':
-                    continue
-                else:
+                self.data[i] = instr
+                if exit_code != 'loop':
                     break
 
 

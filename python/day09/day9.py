@@ -7,11 +7,10 @@ with open(filename) as f:
 
 
 class IterableSum:
-    def __init__(self, data, n=25, count=25):
+    def __init__(self, data, n=25):
         self.data = data[:]
         self.i = 0
         self.n = n
-        self.count = count
         self.nums = {}
         self.invalid_num = None
 
@@ -36,7 +35,7 @@ class IterableSum:
                 break
 
     def check(self):
-        for sub in self.data[self.i-self.count: self.i]:
+        for sub in self.data[self.i-self.n: self.i]:
             self.remove(sub)
             if self.data[self.i] - sub in self.nums:
                 self.add(sub)
@@ -45,7 +44,7 @@ class IterableSum:
 
     def next(self):
         if self.check():
-            self.remove(self.data[self.i-self.count])
+            self.remove(self.data[self.i-self.n])
             self.add(self.data[self.i])
             self.i += 1
             return 'valid'
@@ -70,7 +69,7 @@ class IterableSum:
             else:
                 return min(self.data[start:end]) + max(self.data[start:end])
 
-itersum = IterableSum(data, n=25, count=25)
+itersum = IterableSum(data, n=25)
 itersum.run()
 print(f'Part 1: {itersum.invalid_num}')
 print(f'Part 2: {itersum.find_contig(itersum.invalid_num)}')

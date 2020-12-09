@@ -1,6 +1,5 @@
 import pathlib
 import re
-import time
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')

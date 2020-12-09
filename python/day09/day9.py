@@ -56,16 +56,20 @@ class IterableSum:
     def find_contig(self, findnum):
         start = 0
         end = 1
+        cursum = None
         while True:
-            cursum = sum(self.data[start:end])
+            if cursum is None:
+                cursum = sum(self.data[start:end])
+
             if cursum < findnum:
                 end += 1
+                cursum += self.data[end-1]
             elif cursum > findnum:
                 start += 1
                 end = start + 1
+                cursum = None
             else:
                 return min(self.data[start:end]) + max(self.data[start:end])
-
 
 itersum = IterableSum(data, n=25, count=25)
 itersum.run()

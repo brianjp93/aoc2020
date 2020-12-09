@@ -53,23 +53,22 @@ class IterableSum:
         self.invalid_num = self.data[self.i]
         return 'invalid'
 
-    def find_contig(self):
+    def find_contig(self, findnum):
         start = 0
         end = 1
         while True:
-            cur_range = self.data[start:end]
-            cursum = sum(cur_range)
-            if cursum < self.invalid_num:
+            cursum = sum(self.data[start:end])
+            if cursum < findnum:
                 end += 1
-            elif cursum > self.invalid_num:
+            elif cursum > findnum:
                 start += 1
                 end = start + 1
             else:
-                return min(cur_range) + max(cur_range)
+                return min(self.data[start:end]) + max(self.data[start:end])
 
 
 
 itersum = IterableSum(data, n=25, nsum=25)
 itersum.run()
 print(f'Part 1: {itersum.invalid_num}')
-print(f'Part 2: {itersum.find_contig()}')
+print(f'Part 2: {itersum.find_contig(itersum.invalid_num)}')

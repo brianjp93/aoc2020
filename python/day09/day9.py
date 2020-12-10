@@ -1,5 +1,4 @@
 import pathlib
-import re
 
 CWD = pathlib.Path(__file__).parent.absolute()
 filename = pathlib.PurePath(CWD, 'data')

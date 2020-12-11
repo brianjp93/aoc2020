@@ -20,11 +20,26 @@ class Lobby:
         self.xmax = len(self.d[0]) - 1
         self.ymax = len(self.d) - 1
         self.tolerance = tolerance
+        self.adj_cache = {}
+        self.cache_adj()
 
     def __getitem__(self, coord):
         x, y = coord
         if 0 <= x <= self.xmax and 0 <= y <= self.ymax:
             return self.d[y][x]
+
+    @property
+    def flat(self):
+        for y, row in enumerate(self.d):
+            for x, ch in enumerate(row):
+                yield ((x, y), ch)
+
+    def cache_adj(self):
+        for coord, ch in self.flat:
+            for change in ADJ:
+                newcoord = tuple(a+b for a,b in zip(change, coord))
+                if self[newcoord] not in [None, FLOOR]:
+                    self.adj_cache[coord] = self.adj_cache.get(coord, []) + [newcoord]
 
     def find_stable(self):
         while True:
@@ -49,19 +64,20 @@ class Lobby:
         return self[coord]
 
     def count_adj(self, coord):
-        return sum(self[tuple(a+b for a,b in zip(coord, change))] == OCC for change in ADJ)
+        if coord not in self.adj_cache:
+            self.cache_adj()
+        return sum(self[newcoord] == OCC for newcoord in self.adj_cache[coord])
 
 
 class Lobby2(Lobby):
-    def count_adj(self, coord):
-        adj = []
-        for change in ADJ:
-            newcoord = tuple(a+b for a,b in zip(coord, change))
-            while self[newcoord] == FLOOR:
-                newcoord = tuple(a+b for a,b in zip(newcoord, change))
-            adj.append(self[newcoord] == OCC)
-        return sum(adj)
-
+    def cache_adj(self):
+        for coord, ch in self.flat:
+            for change in ADJ:
+                newcoord = tuple(a+b for a,b in zip(coord, change))
+                while self[newcoord] == FLOOR:
+                    newcoord = tuple(a+b for a,b in zip(newcoord, change))
+                if self[newcoord] is not None:
+                    self.adj_cache[coord] = self.adj_cache.get(coord, []) + [newcoord]
 
 l = Lobby(d)
 l.find_stable()

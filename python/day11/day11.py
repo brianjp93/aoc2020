@@ -36,30 +36,20 @@ class Lobby:
     def next(self):
         newmap = []
         for y, row in enumerate(self.d):
-            newrow = []
-            for x, ch in enumerate(row):
-                newrow.append(self.next_state((x, y)))
-            newmap.append(''.join(newrow))
+            newmap.append(''.join([self.next_state((x, y)) for x, _ in enumerate(row)]))
         self.d = newmap
-        return newmap
 
     def next_state(self, coord):
         if self[coord] == EMPTY:
-            occ, empty = self.count_adj(coord)
-            if occ == 0:
+            if self.count_adj(coord) == 0:
                 return OCC
         elif self[coord] == OCC:
-            occ, empty = self.count_adj(coord)
-            if occ >= self.tolerance:
+            if self.count_adj(coord) >= self.tolerance:
                 return EMPTY
         return self[coord]
 
     def count_adj(self, coord):
-        adj = []
-        for change in ADJ:
-            newcoord = tuple(a+b for a,b in zip(coord, change))
-            adj.append(self[newcoord])
-        return adj.count(OCC), adj.count(EMPTY)
+        return sum(self[tuple(a+b for a,b in zip(coord, change))] == OCC for change in ADJ)
 
 
 class Lobby2(Lobby):

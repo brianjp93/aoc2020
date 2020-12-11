@@ -43,15 +43,15 @@ class Lobby:
 
     def find_stable(self):
         while True:
-            oldmap = ''.join(self.d)
+            oldmap = ''.join(ch for _, ch in self.flat)
             self.next()
-            if ''.join(self.d) == oldmap:
+            if ''.join(ch for _, ch in self.flat) == oldmap:
                 break
 
     def next(self):
         newmap = []
         for y, row in enumerate(self.d):
-            newmap.append(''.join(self.next_state((x, y)) for x, _ in enumerate(row)))
+            newmap.append([self.next_state((x, y)) for x, _ in enumerate(row)])
         self.d = newmap
 
     def next_state(self, coord):
@@ -79,8 +79,8 @@ class Lobby2(Lobby):
 
 l = Lobby(d)
 l.find_stable()
-print(''.join(l.d).count(OCC))
+print(''.join(ch for _, ch in l.flat).count(OCC))
 
 l2 = Lobby2(d, tolerance=5)
 l2.find_stable()
-print(''.join(l2.d).count(OCC))
+print(''.join(ch for _, ch in l2.flat).count(OCC))

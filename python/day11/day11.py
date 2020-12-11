@@ -1,5 +1,6 @@
 import pathlib
 import copy
+from itertools import count
 
 filename = pathlib.PurePath(pathlib.Path(__file__).parent.absolute(), 'data')
 with open(filename) as f:
@@ -36,13 +37,14 @@ class Lobby:
 
     def cache_adj(self):
         for coord, ch in self.flat:
+            self.adj_cache[coord] = []
             for change in ADJ:
                 newcoord = tuple(a+b for a,b in zip(change, coord))
                 if self[newcoord] not in [None, FLOOR]:
-                    self.adj_cache[coord] = self.adj_cache.get(coord, []) + [newcoord]
+                    self.adj_cache[coord].append(newcoord)
 
     def find_stable(self):
-        while True:
+        for i in count():
             oldmap = ''.join(ch for _, ch in self.flat)
             self.next()
             if ''.join(ch for _, ch in self.flat) == oldmap:
@@ -70,12 +72,13 @@ class Lobby:
 class Lobby2(Lobby):
     def cache_adj(self):
         for coord, ch in self.flat:
+            self.adj_cache[coord] = []
             for change in ADJ:
                 newcoord = tuple(a+b for a,b in zip(coord, change))
                 while self[newcoord] == FLOOR:
                     newcoord = tuple(a+b for a,b in zip(newcoord, change))
                 if self[newcoord] is not None:
-                    self.adj_cache[coord] = self.adj_cache.get(coord, []) + [newcoord]
+                    self.adj_cache[coord].append(newcoord)
 
 l = Lobby(d)
 l.find_stable()

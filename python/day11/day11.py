@@ -36,7 +36,7 @@ class Lobby:
     def next(self):
         newmap = []
         for y, row in enumerate(self.d):
-            newmap.append(''.join([self.next_state((x, y)) for x, _ in enumerate(row)]))
+            newmap.append(''.join(self.next_state((x, y)) for x, _ in enumerate(row)))
         self.d = newmap
 
     def next_state(self, coord):
@@ -59,8 +59,8 @@ class Lobby2(Lobby):
             newcoord = tuple(a+b for a,b in zip(coord, change))
             while self[newcoord] == FLOOR:
                 newcoord = tuple(a+b for a,b in zip(newcoord, change))
-            adj.append(self[newcoord])
-        return adj.count(OCC), adj.count(EMPTY)
+            adj.append(self[newcoord] == OCC)
+        return sum(adj)
 
 
 l = Lobby(d)

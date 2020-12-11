@@ -7,17 +7,15 @@ with open(filename) as f:
     data = [line.strip() for line in f]
 
 TREE = '#'
-def count_trees_on_slope(data, dx, dy):
-    max_x = len(data[0])
-    max_y = len(data)
-    x = y = count = 0
-    while y < max_y:
-        if data[y][x % max_x] == TREE:
-            count += 1
-        x += dx
-        y += dy
-    return count
 
+def coords(dx, dy, max_x, max_y):
+    coord = (0, 0)
+    while coord[1] < max_y:
+        yield coord
+        coord = ((coord[0] + dx) % max_x, coord[1] + dy)
+
+def count_trees_on_slope(data, dx, dy):
+    return sum(data[y][x] == TREE for x, y in coords(dx, dy, len(data[0]), len(data)))
 
 slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
 counts = [count_trees_on_slope(data, *x) for x in slopes]

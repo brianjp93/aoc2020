@@ -64,8 +64,6 @@ class Lobby:
         return self[coord]
 
     def count_adj(self, coord):
-        if coord not in self.adj_cache:
-            self.cache_adj()
         return sum(self[newcoord] == OCC for newcoord in self.adj_cache[coord])
 
 

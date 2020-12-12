@@ -4,62 +4,77 @@ filename = pathlib.PurePath(pathlib.Path(__file__).parent.absolute(), 'data')
 with open(filename) as f:
     d = [x.strip() for x in f.read().strip().split('\n')]
 
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        if isinstance(other, int):
+            return Point(self.x + other, self.y + other)
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __mul__(self, other):
+        if isinstance(other, int):
+            return Point(self.x * other, self.y * other)
+        return Point(self.x * other.x, self.y * other.y)
+
+    def __eq__(self, other):
+        if isinstance(other, type(self)):
+            return self.x == other.x and self.y == other.y
+        return False
+
+    def rot_90(self, n):
+        for i in range(n):
+            self.x, self.y = -self.y, self.x
+
+    def manhattan(self, other=None):
+        if other is None:
+            return abs(self.x) + abs(self.y)
+        else:
+            return abs(self.x - other.y) + abs(self.y - other.y)
+
+
 CARDINAL = {
-    'N': (0, -1),
-    'E': (1, 0),
-    'S': (0, 1),
-    'W': (-1, 0),
+    'N': Point(0, -1),
+    'E': Point(1, 0),
+    'S': Point(0, 1),
+    'W': Point(-1, 0),
 }
-
-DIRS = [
-    (0, -1),
-    (1, 0),
-    (0, 1),
-    (-1, 0),
-]
+DIRS = list(CARDINAL.values())
 
 
-def do_move(move, pos, facing):
-    instr = move[0]
-    dist = int(move[1:])
-    if instr in CARDINAL:
-        newmove = (CARDINAL[instr][0] * dist, CARDINAL[instr][1] * dist)
-    elif instr == 'F':
-        newmove = (facing[0]*dist, facing[1]*dist)
-    else:
-        change = 1 if instr == 'R' else -1
-        change = int(change * dist) // 90
-        facing = DIRS[(DIRS.index(facing) + change) % len(DIRS)]
-        newmove = (0, 0)
-    pos = tuple(a+b for a,b in zip(pos, newmove))
-    return pos, facing
+def do_move(d, pos, facing):
+    for move in d:
+        instr, dist = move[0], int(move[1:])
+        if instr in CARDINAL:
+            pos = pos + (CARDINAL[instr]) * dist
+        elif instr == 'F':
+            pos = pos + (facing * dist)
+        else:
+            change = int((1 if instr == 'R' else 3) * dist) // 90
+            facing = DIRS[(DIRS.index(facing) + change) % len(DIRS)]
+            newmove = Point(0, 0)
+    return pos
 
 
-def do_move2(move, pos, waypoint):
-    instr = move[0]
-    dist = int(move[1:])
-    if instr in CARDINAL:
-        newmove = (CARDINAL[instr][0] * dist, CARDINAL[instr][1] * dist)
-        waypoint = tuple(a+b for a,b in zip(waypoint, newmove))
-    elif instr == 'F':
-        newmove = (waypoint[0]*dist, waypoint[1]*dist)
-        pos = tuple(a+b for a,b in zip(pos, newmove))
-    else:
-        change = 1 if instr == 'R' else 3
-        change = int(change * dist) // 90
-        for i in range(change):
-            waypoint = (-waypoint[1], waypoint[0])
-    return pos, waypoint
+def do_move2(d, pos, waypoint):
+    for move in d:
+        instr, dist = move[0], int(move[1:])
+        if instr in CARDINAL:
+            waypoint = waypoint + (CARDINAL[instr] * dist)
+        elif instr == 'F':
+            pos = pos + (waypoint * dist)
+        else:
+            change = 1 if instr == 'R' else 3
+            change = int(change * dist) // 90
+            waypoint.rot_90(change)
+    return pos
 
 
-pos = (0, 0)
-facing = (1, 0)
-for move in d:
-    pos, facing = do_move(move, pos, facing)
-print(sum(map(abs, pos)))
+pos = do_move(d, Point(0, 0), Point(1, 0))
+print(pos.manhattan())
 
-pos = (0, 0)
-waypoint = (10, -1)
-for move in d:
-    pos, waypoint = do_move2(move, pos, waypoint)
-print(sum(map(abs, pos)))
+pos = do_move2(d, Point(0, 0), Point(10, -1))
+print(pos.manhattan())

@@ -24,15 +24,14 @@ def do_move(move, pos, facing):
     dist = int(move[1:])
     if instr in CARDINAL:
         newmove = (CARDINAL[instr][0] * dist, CARDINAL[instr][1] * dist)
-        pos = tuple(a+b for a,b in zip(pos, newmove))
     elif instr == 'F':
         newmove = (facing[0]*dist, facing[1]*dist)
-        pos = tuple(a+b for a,b in zip(pos, newmove))
     else:
         change = 1 if instr == 'R' else -1
         change = int(change * dist) // 90
         facing = DIRS[(DIRS.index(facing) + change) % len(DIRS)]
         newmove = (0, 0)
+    pos = tuple(a+b for a,b in zip(pos, newmove))
     return pos, facing
 
 

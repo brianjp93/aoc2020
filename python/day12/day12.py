@@ -20,6 +20,9 @@ class Point:
             return Point(self.x * other, self.y * other)
         return Point(self.x * other.x, self.y * other.y)
 
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
     def __eq__(self, other):
         if isinstance(other, type(self)):
             return self.x == other.x and self.y == other.y
@@ -49,7 +52,7 @@ def do_move(d, pos, facing):
     for move in d:
         instr, dist = move[0], int(move[1:])
         if instr in CARDINAL:
-            pos = pos + (CARDINAL[instr]) * dist
+            pos = pos + (CARDINAL[instr] * dist)
         elif instr == 'F':
             pos = pos + (facing * dist)
         else:

@@ -1,5 +1,6 @@
 import pathlib
 import numpy as np
+from sympy.ntheory.modular import solve_congruence
 
 filename = pathlib.PurePath(pathlib.Path(__file__).parent.absolute(), 'data')
 with open(filename) as f:
@@ -40,3 +41,8 @@ def find_start(numsd, nums):
 
 start = find_start(numsd, nums)
 print(f'Part 2: {start}')
+
+# part 2 alternative method
+# import solve_congruence from sympy lul
+x = solve_congruence(*((x[1]-x[0], x[1]) for x in numsd.items()))
+print(x[0])

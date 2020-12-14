@@ -19,8 +19,7 @@ def find_start(nums):
     old_len = 0
     offset_dict = {}
     while True:
-        for offset, bus in nums.items():
-            group = [bus for offset, bus in nums.items() if (start+offset) % bus == 0]
+        group = [bus for offset, bus in nums.items() if (start+offset) % bus == 0]
         if group:
             group.sort()
             group = tuple(group)

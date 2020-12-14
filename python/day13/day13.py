@@ -18,21 +18,23 @@ numsd = {i: int(x) for i, x in enumerate(d) if x != 'x'}
 
 def find_start(numsd, nums):
     lcm = int(np.lcm.reduce(nums))
-    start = 0
-    add_offset = nums[0]
+    start, add_offset = 0, 1
+    old_len = 0
     offset_dict = {}
     while True:
-        found = True
         for offset, bus in numsd.items():
-            if (start + offset) % bus == 0:
-                if bus in offset_dict:
-                    diff = start - offset_dict[bus]
-                    if diff > add_offset:
-                        add_offset = diff
-                offset_dict[bus] = start
-            else:
-                found = False
-        if found:
+            group = [bus for offset, bus in numsd.items() if (start+offset) % bus == 0]
+        if group:
+            group.sort()
+            group = tuple(group)
+            if group in offset_dict:
+                diff = start - offset_dict[group]
+                if len(group) > old_len:
+                    add_offset = diff
+                    old_len = len(group)
+            offset_dict[group] = start
+
+        if len(group) == len(nums):
             return start % lcm
         start += add_offset
 

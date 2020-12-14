@@ -19,39 +19,33 @@ def apply_mask(n, mask):
             out.append('0')
     out = out[::-1]
     out = ''.join(out)
-    out = int(out, 2)
-    return out
+    return int(out, 2)
 
 def apply_mask2(n, mask):
     out = []
     nbin = f'{n:0b}'[::-1]
     revmask = mask[::-1]
     for i, ch in enumerate(revmask):
-        if ch in ['X', '1']:
-            out.append(ch)
-        elif ch == '0' and i < len(nbin):
+        if ch == '0' and i < len(nbin):
             out.append(nbin[i])
         else:
-            out.append('0')
+            out.append(ch)
     out = out[::-1]
-    out = ''.join(out)
-    return out
+    return ''.join(out)
 
 def get_all_options(masked_num):
     all_options = []
     xcount = masked_num.count('X')
-    if xcount == 0:
-        return [masked_num]
-    rang = int('1'*xcount, 2) + 1
-    for n in range(rang):
+    for n in range(2**xcount):
         newoption = masked_num
         for i in f'{n:0b}'.zfill(xcount):
             newoption = newoption.replace('X', i, 1)
         all_options.append(int(newoption, 2))
-    return all_options
+    return all_options or [masked_num]
 
 
-mem = {}
+mem1 = {}
+mem2 = {}
 for line in d:
     if 'mask' in line:
         mask = line.split('=')[1].strip()
@@ -59,21 +53,11 @@ for line in d:
         addr, num = re.search(r'mem\[(\d+)\] = (\d+)', line).groups()
         addr, num = int(addr), int(num)
         masked_num = apply_mask(num, mask)
-        mem[addr] = masked_num
-
-print(sum(mem.values()))
-
-
-mem = {}
-for line in d:
-    if 'mask' in line:
-        mask = line.split('=')[1].strip()
-    elif 'mem' in line:
-        addr, num = re.search(r'mem\[(\d+)\] = (\d+)', line).groups()
-        addr, num = int(addr), int(num)
         masked_addr = apply_mask2(addr, mask)
         addresses = get_all_options(masked_addr)
+        mem1[addr] = masked_num
         for addr in addresses:
-            mem[addr] = num
+            mem2[addr] = num
 
-print(sum(mem.values()))
+print(f'Part 1: {sum(mem1.values())}')
+print(f'Part 2: {sum(mem2.values())}')

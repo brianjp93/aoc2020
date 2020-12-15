@@ -1,6 +1,5 @@
 import pathlib
 import re
-from itertools import permutations
 
 filename = pathlib.PurePath(pathlib.Path(__file__).parent.absolute(), 'data')
 with open(filename) as f:

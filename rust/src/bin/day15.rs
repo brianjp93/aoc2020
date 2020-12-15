@@ -9,7 +9,7 @@ fn main() {
 
     for n in &[2020, 30000000] {
         let dc = d.clone();
-        let mut history: HashMap<N, NList> = HashMap::new();
+        let mut history: HashMap<N, NList> = HashMap::with_capacity(*n);
         let mut i = 0 as usize;
         let mut speak: N = -1;
         while &i < n {

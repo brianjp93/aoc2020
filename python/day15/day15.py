@@ -3,8 +3,7 @@ _d = d[:]
 init_length = len(d)
 
 for n in [2020, 30000000]:
-    d = _d[:]
-    history = {}
+    history = dict.fromkeys((-1,) * n)
     i = 0
     speak = None
     while i < n:

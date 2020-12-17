@@ -25,7 +25,7 @@ class Space:
         for y, row in enumerate(d):
             for x, ch in enumerate(row):
                 if ch == ACTIVE:
-                    self.active.add((x, y) + ((0,) * (self.dim - 2)))
+                    self.active.add((x, y, *((0,) * (self.dim - 2))))
 
     def near(self, coords):
         for p in product((1, 0, -1), repeat=self.dim):

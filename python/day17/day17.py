@@ -19,7 +19,6 @@ class Space:
         self.dim = dim
         self.origin = (0,) * dim
         self.process(d)
-        self.near_count = None
 
     def process(self, d):
         self.active = set()
@@ -41,13 +40,10 @@ class Space:
 
     def next(self):
         self.count_near()
-        active = set()
-        for coord, count in self.near_count.items():
-            if count == 3:
-                active.add(coord)
-            elif count == 2 and coord in self.active:
-                active.add(coord)
-        self.active = active
+        self.active = {
+            coord for coord, count in self.near_count.items()
+            if count == 3 or count == 2 and coord in self.active
+        }
 
 
 for i in range(2):

@@ -14,7 +14,7 @@ def evaluate(line):
 
 
 
-def evaluate2(line, i=0):
+def evaluate2(line):
     while True:
         while True:
             _line = line

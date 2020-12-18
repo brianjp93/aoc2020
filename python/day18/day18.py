@@ -27,13 +27,7 @@ def evaluate2(line):
             if line == _line:
                 break
         line = re.sub(r'(\(\d+\))', lambda x: x.group(0)[1:-1], line)
-        try:
-            return int(line)
-        except:
-            pass
-        if re.match('^\d+[\+\*]\d+$', line):
-            return eval(line)
-        if '+' not in line:
+        if '+' not in line or '*' not in line:
             return eval(line)
     return line
 

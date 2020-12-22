@@ -36,6 +36,9 @@ class Tile:
         name = int(lines[0].split()[1].strip(':'))
         return lines[1:], name
 
+    def show(self):
+        return '\n'.join(self.tile)
+
     def sides(self):
         top = self.tile[0]
         bottom = self.tile[-1]
@@ -50,11 +53,36 @@ class Tile:
             out.append(side[::-1])
         return out
 
+    def flip_h(self):
+        self.tile = [row[::-1] for row in self.tile]
+
+    def flip_v(self):
+        self.tile = self.tile[::-1]
+
+    def rotate(self):
+        out = []
+        half = (len(self.tile) - 1) / 2
+        for y in range(len(self.tile)):
+            row = []
+            for x in range(len(self.tile[0])):
+                xn, yn = -(y - half), x - half
+                xn, yn = int(xn + half), int(yn + half)
+                row.append(self.tile[yn][xn])
+            out.append(''.join(row))
+        self.tile = out
+
+
 p = Puzzle()
 for part in parts:
     p.add(part)
 p.cache_sides()
 print(p.sides)
+
+t = p.tiles[0]
+print(t.show())
+print()
+t.rotate()
+print(t.show())
 
 # print(p)
 # print(p.tiles[0].tile)

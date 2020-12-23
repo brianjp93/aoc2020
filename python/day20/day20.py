@@ -59,17 +59,18 @@ class Tile:
     def flip_v(self):
         self.tile = self.tile[::-1]
 
-    def rotate(self):
-        out = []
-        half = (len(self.tile) - 1) / 2
-        for y in range(len(self.tile)):
-            row = []
-            for x in range(len(self.tile[0])):
-                xn, yn = -(y - half), x - half
-                xn, yn = int(xn + half), int(yn + half)
-                row.append(self.tile[yn][xn])
-            out.append(''.join(row))
-        self.tile = out
+    def rotate(self, n=1):
+        for i in range(n):
+            out = []
+            half = (len(self.tile) - 1) / 2
+            for y in range(len(self.tile)):
+                row = []
+                for x in range(len(self.tile[0])):
+                    xn, yn = -(y - half), x - half
+                    xn, yn = int(xn + half), int(yn + half)
+                    row.append(self.tile[yn][xn])
+                out.append(''.join(row))
+            self.tile = out
 
 
 p = Puzzle()

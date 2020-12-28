@@ -64,16 +64,13 @@ class Puzzle:
                         if all(row[offset:offset+MONSTERLEN][x] == '#' for x in MONSTER[0]):
                             if all(edgeless[y+1][offset:offset+MONSTERLEN][x] == '#' for x in MONSTER[1]):
                                 if all(edgeless[y+2][offset:offset+MONSTERLEN][x] == '#' for x in MONSTER[2]):
-
                                     for change in range(3):
                                         part = [x for x in edgeless_copy[y+change]]
                                         for n in MONSTER[change]:
                                             part[n+offset] = 'O'
                                         edgeless_copy[y+change] = ''.join(part)
-
                                     count += 1
-            i += 1
-            i = i % len(adj)
+            i = (i+1) % len(adj)
         return count, edgeless_copy
 
     def edgeless(self):
@@ -94,14 +91,6 @@ class Puzzle:
             out = out + rows
         return out
 
-    def show_edgeless(self):
-        edgeless = self.edgeless()
-        return '\n'.join(edgeless)
-
-    @property
-    def sidelength(self):
-        return int(len(self.tiles)**0.5)
-
     def cache_sides(self):
         self.sides = {}
         for tile in self.tiles.values():
@@ -118,10 +107,6 @@ class Puzzle:
                 count_single[val[0]] += 1
         count_single = {key: val for key,val in count_single.items() if val == 4}
         return count_single
-
-    def narrow(self):
-        for side in sides:
-            pass
 
     def create_map(self):
         self.map[(0, 0)] = list(self.tiles.values())[0]
@@ -196,8 +181,7 @@ class Tile:
             self.rotate()
         else:
             self.flip_h()
-        self.i += 1
-        self.i = self.i % len(self.adj)
+        self.i = (self.i+1) % len(self.adj)
 
 
 p = Puzzle()

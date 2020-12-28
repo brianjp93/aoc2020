@@ -19,6 +19,7 @@ for line in MONSTER_STRING.splitlines():
     row = [i for i, ch in enumerate(line) if ch == '#']
     MONSTER.append(row)
 MONSTERLEN = 20
+ADJ = ['rot'] * 3 + ['flip']
 
 class Puzzle:
     def __init__(self):
@@ -51,9 +52,8 @@ class Puzzle:
         line_len = MONSTERLEN
         count = 0
         i = 0
-        adj = ['rot'] * 3 + ['flip']
         while count == 0:
-            if adj[i] == 'rot':
+            if ADJ[i] == 'rot':
                 edgeless = self.rotate(edgeless)
             else:
                 edgeless = self.flip(edgeless)
@@ -70,7 +70,7 @@ class Puzzle:
                                             part[n+offset] = 'O'
                                         edgeless_copy[y+change] = ''.join(part)
                                     count += 1
-            i = (i+1) % len(adj)
+            i = (i+1) % len(ADJ)
         return count, edgeless_copy
 
     def edgeless(self):
@@ -126,7 +126,6 @@ class Puzzle:
 
 
 class Tile:
-    adj = ['rot'] * 3 + ['flip']
     def __init__(self, tile):
         self.tile, self.n = self.create(tile)
         self.i = 0
@@ -135,9 +134,6 @@ class Tile:
         lines = tile.splitlines()
         name = int(lines[0].split()[1].strip(':'))
         return lines[1:], name
-
-    def show(self):
-        return '\n'.join(self.tile)
 
     @property
     def edgeless(self):
@@ -157,31 +153,24 @@ class Tile:
             out.append(side[::-1])
         return out
 
-    def flip_h(self):
-        self.tile = [row[::-1] for row in self.tile]
-
-    def flip_v(self):
-        self.tile = self.tile[::-1]
-
-    def rotate(self, n=1):
-        for i in range(n):
-            out = []
-            half = (len(self.tile) - 1) / 2
-            for y in range(len(self.tile)):
-                row = []
-                for x in range(len(self.tile[0])):
-                    xn, yn = -(y - half), x - half
-                    xn, yn = int(xn + half), int(yn + half)
-                    row.append(self.tile[yn][xn])
-                out.append(''.join(row))
-            self.tile = out
+    def rotate(self):
+        out = []
+        half = (len(self.tile) - 1) / 2
+        for y in range(len(self.tile)):
+            row = []
+            for x in range(len(self.tile[0])):
+                xn, yn = -(y - half), x - half
+                xn, yn = int(xn + half), int(yn + half)
+                row.append(self.tile[yn][xn])
+            out.append(''.join(row))
+        self.tile = out
 
     def next(self):
-        if self.adj[self.i] == 'rot':
+        if ADJ[self.i] == 'rot':
             self.rotate()
         else:
-            self.flip_h()
-        self.i = (self.i+1) % len(self.adj)
+            self.tile = self.tile[::-1]
+        self.i = (self.i+1) % len(ADJ)
 
 
 p = Puzzle()

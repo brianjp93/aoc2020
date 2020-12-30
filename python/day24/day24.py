@@ -7,6 +7,7 @@ with open(filename) as f:
     data = [x.strip() for x in f.read().strip().split('\n')]
 
 
+DIRECTIONS = re.compile(r'(w|nw|ne|e|se|sw)')
 ADJ = {
     'nw': (-1, 1),
     'ne': (1, 1),
@@ -50,8 +51,7 @@ class Room:
 
 
 def simplify(path):
-    directions = re.compile(r'(w|nw|ne|e|se|sw)')
-    matches = directions.findall(path)
+    matches = DIRECTIONS.findall(path)
     coords = (0, 0)
     for match in matches:
         coords = tuple(a+b for a,b in zip(coords, ADJ[match]))
